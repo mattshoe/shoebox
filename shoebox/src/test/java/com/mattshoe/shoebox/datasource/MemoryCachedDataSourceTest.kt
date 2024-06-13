@@ -1,9 +1,9 @@
-package com.mattshoe.shoebox.datasource
+package com.mattshoe.shoebox.data.source
 
 import app.cash.turbine.test
 import com.google.common.truth.Truth
-import com.mattshoe.shoebox.datasource.impl.MemoryCachedDataSource
-import com.mattshoe.shoebox.datasource.serialize.Serializer
+import com.mattshoe.shoebox.data.DataResult
+import com.mattshoe.shoebox.data.source.impl.MemoryCachedDataSource
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -28,13 +28,6 @@ class MemoryCachedDataSourceTest {
 
     @Test
     fun `WHEN dataRetrieval succeeds THEN success is emitted`() = runTest {
-
-        val dataSource: DataSource<String> = DataSource.Builder()
-            .prefsCache(mockk(relaxed = true), String::class)
-            .key("derp")
-            .build()
-
-
         subject.data.test {
             val expectedValue = "yew dun did it now"
 

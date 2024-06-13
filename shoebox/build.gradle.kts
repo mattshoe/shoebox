@@ -1,18 +1,15 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id("com.android.library")
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
-    namespace = "com.mattshoe.shoebox"
+    namespace = "com.test.mattshoe.shoebox"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.mattshoe.shoebox"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

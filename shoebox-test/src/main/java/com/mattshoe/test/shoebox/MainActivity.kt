@@ -9,8 +9,16 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
-import com.mattshoe.shoebox.datasource.DataSource
+import androidx.lifecycle.lifecycleScope
+import com.mattshoe.shoebox.data.DataResult
+import com.mattshoe.shoebox.data.source.catchDataResult
+import com.mattshoe.shoebox.data.source.onInvalidation
+import com.mattshoe.shoebox.data.source.unwrapDataResult
 import com.mattshoe.test.shoebox.databinding.ActivityMainBinding
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -20,8 +28,35 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        DataSource.Builder()
-            .publisher()
+        val repo = Repo(
+            object : Service {
+                override suspend fun foo(bar: Int): String {
+                    delay(1000)
+                    return "foobar"
+                }
+            }
+        ).apply {
+            lifecycleScope.launch {  }
+        }
+
+        repo.data
+            .onInvalidation {
+                println("")
+            }
+            .unwrapDataResult()
+            .onEach {
+                if (it is DataResult.Success) {
+                    println(it.data)
+                }
+            }.launchIn(lifecycleScope)
+
+        lifecycleScope.launch {
+            repo.fetch(42)
+            while (true) {
+                delay(1000)
+                repo.refresh()
+            }
+        }
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

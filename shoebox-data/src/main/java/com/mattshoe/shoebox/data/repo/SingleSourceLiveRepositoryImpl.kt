@@ -10,14 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
-fun <TParams: Any, TData: Any> singleSourceLiveRepository(
-    clazz: KClass<TData>,
-    fetchData: suspend (TParams) -> TData
-): SingleSourceLiveRepository<TParams, TData> {
-    return SingleSourceLiveRepositoryImpl(clazz, fetchData)
-}
-
-internal class SingleSourceLiveRepositoryImpl<TParams: Any, TData: Any>(
+open class SingleSourceLiveRepositoryImpl<TParams: Any, TData: Any>(
     override val clazz: KClass<TData>,
     private val fetchData: suspend (TParams) -> TData,
 ): SingleSourceLiveRepository<TParams, TData> {

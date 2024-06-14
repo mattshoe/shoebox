@@ -1,5 +1,7 @@
 package com.mattshoe.shoebox.data.source.impl
 
+import android.media.MediaParser
+import android.media.MediaParser.TrackData
 import com.mattshoe.shoebox.data.DataResult
 import com.mattshoe.shoebox.data.source.DataSource
 import kotlinx.coroutines.CancellationException
@@ -21,10 +23,13 @@ internal open class MemoryCachedDataSource<T: Any>(
     protected open  val _data = MutableSharedFlow<DataResult<T>>(replay = 1)
     private lateinit var dataRetrievalAction: suspend () -> T
 
+    final override var value: DataResult<T>? = null
+        private set
+
     override val data: Flow<DataResult<T>> = _data
 
-    override suspend fun initialize(dataRetrieval: suspend () -> T) = withContext(dispatcher) {
-        fetchData(forceFetch = false, dataRetrieval)
+    override suspend fun initialize(forceFetch: Boolean, dataRetrieval: suspend () -> T) = withContext(dispatcher) {
+        fetchData(forceFetch, dataRetrieval)
     }
 
     override suspend fun refresh() = withContext(dispatcher) {
@@ -46,11 +51,11 @@ internal open class MemoryCachedDataSource<T: Any>(
                 dataRetrieval?.let {
                     this@MemoryCachedDataSource.dataRetrievalAction = it
                 }
-                _data.emit(
-                    DataResult.Success(
-                        dataRetrievalAction.invoke()
-                    )
+                val data: DataResult<T> = DataResult.Success(
+                    dataRetrievalAction.invoke()
                 )
+                _data.emit(data)
+                value = data
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Throwable) {

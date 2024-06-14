@@ -7,7 +7,7 @@ plugins {
 
 val GROUP_ID = "io.github.mattshoe"
 val ARTIFACT_ID = "shoebox-data"
-val VERSION = "0.0.1"
+val VERSION = "0.0.3"
 
 group = GROUP_ID
 version = VERSION
@@ -15,8 +15,8 @@ version = VERSION
 publishing {
     repositories {
         maven {
-            name = "local"
-            url = uri("${project.layout.buildDirectory}/shoebox-data")
+            name = "localPublication"
+            url = uri("${project.layout.buildDirectory}/repos/releases")
         }
     }
     publications {
@@ -126,10 +126,10 @@ dependencies {
 
 tasks.register<Zip>("generateShoeBoxData") {
     val publishTask = tasks.named(
-        "publishShoeBoxDataPublicationToLocalRepository",
+        "publishShoeBoxDataPublicationToLocalPublicationRepository",
         PublishToMavenRepository::class.java
     )
     from(publishTask.map { it.repository.url })
-    into("shoeBoxData")
-    archiveFileName.set("shoeBoxData.zip")
+    into("")
+    archiveFileName.set("release.zip")
 }

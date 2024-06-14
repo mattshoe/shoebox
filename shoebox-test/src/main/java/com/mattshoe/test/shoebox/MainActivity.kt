@@ -10,8 +10,6 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.lifecycleScope
-import com.mattshoe.shoebox.data.DataResult
-import com.mattshoe.shoebox.data.source.catchDataResult
 import com.mattshoe.shoebox.data.source.onInvalidation
 import com.mattshoe.shoebox.data.source.unwrapDataResult
 import com.mattshoe.test.shoebox.databinding.ActivityMainBinding
@@ -28,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val repo = Repo(
+        val repo = SingleSourceRepo(
             object : Service {
                 override suspend fun foo(bar: Int): String {
                     delay(1000)

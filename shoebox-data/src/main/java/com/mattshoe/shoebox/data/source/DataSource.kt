@@ -1,5 +1,7 @@
 package com.mattshoe.shoebox.data.source
 
+import android.media.MediaParser.TrackData
+import android.provider.ContactsContract.Data
 import com.mattshoe.shoebox.data.DataResult
 import kotlinx.coroutines.flow.Flow
 
@@ -16,6 +18,8 @@ interface DataSource<T: Any> {
         IN_MEMORY,
         BROADCAST
     }
+
+    val value: DataResult<T>?
 
     /**
      * ***Stream producing the most up-to-date value for [T].***
@@ -43,7 +47,7 @@ interface DataSource<T: Any> {
      *
      * @param dataRetrieval The retrieval operation to be performed and whose result will be stored.
      */
-    suspend fun initialize(dataRetrieval: suspend () -> T)
+    suspend fun initialize(forceFetch: Boolean = false, dataRetrieval: suspend () -> T)
 
     /**
      * ***Refresh this [DataSource] with the retrieval operation defined in [initialize].***

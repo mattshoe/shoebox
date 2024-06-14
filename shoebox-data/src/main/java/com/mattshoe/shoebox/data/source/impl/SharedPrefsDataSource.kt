@@ -30,10 +30,13 @@ internal open class SharedPrefsDataSource<T: Any>(
     private val prefs = context.getSharedPreferences("$context.packageName.shoebox.prefs", MODE_PRIVATE)
     private val prefsKey = "${context.packageName}.shoebox.prefs:${key ?: clazz.canonicalName}"
 
+    final override var value: DataResult<T>? = null
+        private set
+
     override val data: Flow<DataResult<T>> = _data
 
-    override suspend fun initialize(dataRetrieval: suspend () -> T) = withContext(dispatcher) {
-        fetchData(forceFetch = false, dataRetrieval)
+    override suspend fun initialize(forceFetch: Boolean, dataRetrieval: suspend () -> T) = withContext(dispatcher) {
+        fetchData(forceFetch, dataRetrieval)
     }
 
     override suspend fun refresh() = withContext(dispatcher) {
@@ -58,11 +61,12 @@ internal open class SharedPrefsDataSource<T: Any>(
 
                 if (canFetchData(forceFetch)) {
                     try {
-                        _data.emit(
-                            DataResult.Success(
-                                doFetchData()
-                            )
-                        )
+                        DataResult.Success(
+                            doFetchData()
+                        ).also {
+                            _data.emit(it)
+                            value = it
+                        }
                     } catch (e: CancellationException) {
                         throw e
                     } catch (e: Throwable) {

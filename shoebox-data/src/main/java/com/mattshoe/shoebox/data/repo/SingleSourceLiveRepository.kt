@@ -6,10 +6,6 @@ import java.io.Closeable
 import kotlin.reflect.KClass
 
 interface SingleSourceLiveRepository<TParams: Any, TData: Any>: Closeable {
-    /**
-     * The [Class] of the object being emitted by [data].
-     */
-    val clazz: KClass<TData>
 
     /**
      * [Flow] which emits the most up-to-date value of [TData].

@@ -1,7 +1,6 @@
 package com.mattshoe.shoebox.data.repo
 
 import com.mattshoe.shoebox.data.DataResult
-import com.mattshoe.shoebox.data.source.DataSource
 import kotlinx.coroutines.flow.Flow
 import java.io.Closeable
 

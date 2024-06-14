@@ -18,10 +18,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.reflect.KClass
 
-open class MultiSourceLiveRepositoryImpl<TParams: Any, TData: Any>(
-    private val clazz: KClass<TData>,
-    private val fetchData: suspend (TParams) -> TData
-): MultiSourceLiveRepository<TParams, TData> {
+abstract class BaseMultiSourceLiveRepository<TParams: Any, TData: Any>: MultiSourceLiveRepository<TParams, TData> {
 
     private data class CacheEntry<TData: Any>(
         val dataSource: DataSource<TData>
@@ -36,7 +33,9 @@ open class MultiSourceLiveRepositoryImpl<TParams: Any, TData: Any>(
     )
     private val dataCacheMutex = Mutex()
     private val dataCache = mutableMapOf<TParams, CacheEntry<TData>>()
+    abstract val dataType: KClass<TData>
 
+    abstract suspend fun fetchData(params: TParams): TData
     protected open fun checkCache(params: TParams): TData? = null
 
     override fun stream(params: TParams, forceFetch: Boolean): Flow<DataResult<TData>> {
@@ -128,7 +127,7 @@ open class MultiSourceLiveRepositoryImpl<TParams: Any, TData: Any>(
         return dataCache[params]
             ?: CacheEntry(
                 DataSource.Builder()
-                    .memoryCache(clazz)
+                    .memoryCache(dataType)
                     .build()
             )
     }

@@ -8,6 +8,6 @@ class DataSourceBuilderRequest {
         SharedPrefsDataSourceBuilder(context, clazz)
     fun <T: Any> memoryCache(clazz: KClass<T>) =
         MemoryCacheDataSourceBuilder(clazz)
-    fun <T: Any> publisher(clazz: KClass<T>) =
+    fun <T: Any> publisherMemoryCache(clazz: KClass<T>) =
         PublisherDataSourceBuilder(clazz)
 }

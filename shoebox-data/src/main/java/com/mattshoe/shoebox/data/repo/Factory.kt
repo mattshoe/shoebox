@@ -3,22 +3,29 @@ package com.mattshoe.shoebox.data.repo
 import kotlin.reflect.KClass
 
 fun <TParams: Any, TData: Any> transientRepository(
-    clazz: KClass<TData>,
     fetchData: suspend (TParams) -> TData
-): SingleSourceLiveRepository<TParams, TData> {
-    return SingleSourceLiveRepositoryImpl(clazz, fetchData)
+): TransientRepository<TParams, TData> {
+    return object : BaseTransientRepository<TParams, TData>() {
+        override suspend fun fetch(params: TParams): TData = fetchData(params)
+    }
 }
 
 fun <TParams: Any, TData: Any> singleSourceLiveRepository(
     clazz: KClass<TData>,
     fetchData: suspend (TParams) -> TData
 ): SingleSourceLiveRepository<TParams, TData> {
-    return SingleSourceLiveRepositoryImpl(clazz, fetchData)
+    return object : BaseSingleSourceLiveRepository<TParams, TData>() {
+        override val dataType = clazz
+        override suspend fun fetchData(params: TParams): TData = fetchData(params)
+    }
 }
 
 fun <TParams: Any, TData: Any> multiSourceLiveRepository(
     clazz: KClass<TData>,
     fetchData: suspend (TParams) -> TData
 ): MultiSourceLiveRepository<TParams, TData> {
-    return MultiSourceLiveRepositoryImpl(clazz, fetchData)
+    return object : BaseMultiSourceLiveRepository<TParams, TData>() {
+        override val dataType = clazz
+        override suspend fun fetchData(params: TParams): TData = fetchData(params)
+    }
 }

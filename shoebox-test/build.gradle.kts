@@ -39,8 +39,7 @@ android {
 }
 
 dependencies {
-//    val shoeboxData = project(":shoebox-data")
-    val shoeboxData = "io.github.mattshoe:shoebox-data:0.0.1"
+    val shoeboxData = project(":shoebox-data")
 
     implementation(shoeboxData)
     implementation(libs.androidx.core.ktx)

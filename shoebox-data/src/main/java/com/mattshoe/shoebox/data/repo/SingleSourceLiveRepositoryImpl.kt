@@ -10,17 +10,17 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
-fun <TParams: Any, TData: Any> simpleLiveRepository(
+fun <TParams: Any, TData: Any> singleSourceLiveRepository(
     clazz: KClass<TData>,
     fetchData: suspend (TParams) -> TData
-): LiveRepository<TParams, TData> {
-    return SimpleSimpleLiveRepository(clazz, fetchData)
+): SingleSourceLiveRepository<TParams, TData> {
+    return SingleSourceLiveRepositoryImpl(clazz, fetchData)
 }
 
-internal class SimpleSimpleLiveRepository<TParams: Any, TData: Any>(
+internal class SingleSourceLiveRepositoryImpl<TParams: Any, TData: Any>(
     override val clazz: KClass<TData>,
     private val fetchData: suspend (TParams) -> TData,
-): LiveRepository<TParams, TData> {
+): SingleSourceLiveRepository<TParams, TData> {
     private val coroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val dataSource by lazy {
         DataSource.Builder()

@@ -39,15 +39,15 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch {  }
         }
 
+        repo.close()
+
         repo.data
             .onInvalidation {
                 println("")
             }
             .unwrapDataResult()
             .onEach {
-                if (it is DataResult.Success) {
-                    println(it.data)
-                }
+                println(it)
             }.launchIn(lifecycleScope)
 
         lifecycleScope.launch {

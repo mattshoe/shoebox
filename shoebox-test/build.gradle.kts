@@ -39,9 +39,10 @@ android {
 }
 
 dependencies {
-    val shoebox: ProjectDependency = project(":shoebox")
+//    val shoeboxData = project(":shoebox-data")
+    val shoeboxData = "io.github.mattshoe:shoebox-data:0.0.1"
 
-    implementation(shoebox)
+    implementation(shoeboxData)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -49,8 +50,9 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
+
     testImplementation(libs.junit)
-    testImplementation(shoebox)
+    testImplementation(shoeboxData)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

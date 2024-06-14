@@ -9,7 +9,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/shoebox" />
+            <option value="$PROJECT_DIR$/shoebox-data" />
             <option value="$PROJECT_DIR$/shoebox-test" />
           </set>
         </option>

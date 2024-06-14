@@ -10,8 +10,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.lifecycleScope
-import com.mattshoe.shoebox.data.source.onInvalidation
-import com.mattshoe.shoebox.data.source.unwrapDataResult
+import io.github.mattshoe.shoebox.data.source.onInvalidation
+import io.github.mattshoe.shoebox.data.source.unwrapDataResult
 import com.mattshoe.test.shoebox.databinding.ActivityMainBinding
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn

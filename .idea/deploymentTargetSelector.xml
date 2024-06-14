@@ -2,13 +2,7 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="shoebox-test">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="shoebox">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="derp">
+      <SelectionState runConfigName="shoebox-app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

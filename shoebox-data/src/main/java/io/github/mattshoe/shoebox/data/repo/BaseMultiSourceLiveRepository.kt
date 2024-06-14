@@ -2,6 +2,7 @@ package io.github.mattshoe.shoebox.data.repo
 
 import io.github.mattshoe.shoebox.data.DataResult
 import io.github.mattshoe.shoebox.data.source.DataSource
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +19,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlin.reflect.KClass
 
-abstract class BaseMultiSourceLiveRepository<TParams: Any, TData: Any>:
-    MultiSourceLiveRepository<TParams, TData> {
+abstract class BaseMultiSourceLiveRepository<TParams: Any, TData: Any>(
+    dispatcher: CoroutineDispatcher
+): MultiSourceLiveRepository<TParams, TData> {
 
     private data class CacheEntry<TData: Any>(
         val dataSource: DataSource<TData>
@@ -27,7 +29,7 @@ abstract class BaseMultiSourceLiveRepository<TParams: Any, TData: Any>:
 
     protected val coroutineScope = CoroutineScope(
         SupervisorJob()
-                + Dispatchers.IO
+                + dispatcher
                 + CoroutineName(
             "${javaClass.canonicalName}:RepoScope"
         )
@@ -43,7 +45,7 @@ abstract class BaseMultiSourceLiveRepository<TParams: Any, TData: Any>:
         return initializeNewStream(params, forceFetch)
             .catch {
                 emit(DataResult.Error(it))
-            }.distinctUntilChanged()
+            }
     }
 
     override fun latestValue(params: TParams): DataResult<TData>? {

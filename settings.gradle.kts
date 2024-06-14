@@ -23,4 +23,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "ShoeBox"
 include(":shoebox-data")
+include(":shoebox-app")
 include(":shoebox-test")

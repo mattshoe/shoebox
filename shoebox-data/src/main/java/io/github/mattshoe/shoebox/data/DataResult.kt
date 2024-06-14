@@ -19,7 +19,7 @@ sealed interface DataResult<T: Any> {
 
     /**
      * Representation of an invalidated cache. Meaning any previous data
-     * is no longer usable.
+     * is invalid.
      */
-    class Invalidated<T: Any>: DataResult<T>
+    data class Invalidated<T: Any>(private val data: Unit = Unit): DataResult<T>
 }

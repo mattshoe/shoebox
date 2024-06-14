@@ -39,7 +39,10 @@ internal open class MemoryCachedDataSource<T: Any>(
 
     override suspend fun invalidate() {
         _data.resetReplayCache()
-        _data.emit(DataResult.Invalidated())
+        with (DataResult.Invalidated<T>()) {
+            _data.emit(this)
+            value = this
+        }
     }
 
     private suspend fun fetchData(forceFetch: Boolean, dataRetrieval: (suspend () -> T)?) {
@@ -66,9 +69,10 @@ internal open class MemoryCachedDataSource<T: Any>(
 
     private fun canFetchData(forceFetch: Boolean): Boolean {
         val hasDataBeenFetchedAlready = this::dataRetrievalAction.isInitialized
-        val noOtherRetrievalsAreInFlight = dataMutex.tryLock()
-        return (forceFetch || !hasDataBeenFetchedAlready) && noOtherRetrievalsAreInFlight
+        return (forceFetch || !hasDataBeenFetchedAlready) && noOtherServiceCallsAreInFlight()
     }
+
+    private fun noOtherServiceCallsAreInFlight() = dataMutex.tryLock()
 
 }
 

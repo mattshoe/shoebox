@@ -1,17 +1,20 @@
 plugins {
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
 android {
-    namespace = "io.github.mattshoe.shoebox.test"
+    namespace = "com.mattshoe.test.shoebox"
     compileSdk = 34
 
     defaultConfig {
+        applicationId = "com.mattshoe.test.shoebox"
         minSdk = 24
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -30,18 +33,25 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
+    val shoeboxData = project(":shoebox-data")
 
+    implementation(shoeboxData)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
-    implementation(libs.kotlinx.coroutines.test)
-    implementation(libs.junit)
-    api(libs.truth)
+    implementation(libs.androidx.constraintlayout)
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+
 
     testImplementation(libs.junit)
+    testImplementation(shoeboxData)
 
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
